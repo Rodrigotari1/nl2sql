@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Natural Language SQL Tool</title>
+    <title>AI Database Agents - Intelligent Business Intelligence</title>
     <style>
         * {
             margin: 0;
@@ -25,6 +25,38 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Add subtle glow to main heading */
+        .header h1 {
+            text-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #a855f7;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .header {
@@ -59,12 +91,29 @@
             margin-bottom: 24px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
+            animation: cardSlideIn 0.6s ease-out forwards;
+            opacity: 0;
         }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
 
         .card:hover {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .connection-section {
@@ -313,8 +362,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🗃️ Natural Language SQL</h1>
-            <p>Convert your questions into PostgreSQL queries</p>
+            <h1>🤖 AI Database Agents</h1>
+            <p>Intelligent AI agents that understand your data and provide business insights</p>
         </div>
 
         <!-- Connection Section -->
@@ -335,20 +384,20 @@
 
         <!-- Query Section -->
         <div class="card query-section" id="query-section">
-            <h2>Ask Your Question</h2>
+            <h2>What would you like to know?</h2>
             <div class="form-group">
-                <label for="natural-query">Natural Language Query</label>
+                <label for="natural-query">Ask your business question</label>
                 <textarea 
                     id="natural-query" 
                     rows="3" 
-                    placeholder="e.g., Show me all customers who haven't ordered in the last 3 months"
+                    placeholder="e.g., Who are our top customers this quarter? What products are selling best?"
                 ></textarea>
             </div>
-            <button onclick="generateSQL()">Generate SQL</button>
+            <button onclick="generateSQL()">Get Answer</button>
             
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p>Generating SQL query...</p>
+                <p>AI agents are analyzing your request...</p>
             </div>
 
             <div id="query-result"></div>
@@ -387,6 +436,7 @@
                     showStatus(statusDiv, `✅ Connected to: ${result.database_name}`, 'success');
                     currentDatabaseUrl = url;
                     document.getElementById('query-section').classList.add('active');
+                    loadSuggestedQuestions(); // Load AI-generated suggestions
                 } else {
                     showStatus(statusDiv, `❌ ${result.message}`, 'error');
                 }
@@ -433,11 +483,62 @@
         function displayQueryResult(result, container) {
             let html = '';
             
+            // AI Agent Messages
+            if (result.agent_messages && result.agent_messages.length > 0) {
+                html += `<div style="margin-bottom: 20px;">
+                    <h4 style="color: #a855f7; margin-bottom: 10px;">🤖 AI Agents Analysis:</h4>`;
+                
+                result.agent_messages.forEach(msg => {
+                    const priority_color = {
+                        'low': '#4ade80',
+                        'medium': '#fbbf24', 
+                        'high': '#f87171',
+                        'critical': '#ef4444'
+                    }[msg.priority] || '#a1a1aa';
+                    
+                    html += `<div style="background: rgba(255,255,255,0.05); padding: 12px; margin: 8px 0; 
+                                       border-left: 3px solid ${priority_color}; border-radius: 6px;">
+                        <strong style="color: ${priority_color};">${msg.agent.toUpperCase()} Agent:</strong> ${msg.message}
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+            
             if (result.explanation) {
                 html += `<div class="explanation">
-                    <strong>Explanation:</strong><br>
+                    <strong>Query Explanation:</strong><br>
                     ${result.explanation}
                 </div>`;
+            }
+            
+            // Complexity Analysis
+            if (result.complexity_analysis && Object.keys(result.complexity_analysis).length > 0) {
+                html += `<div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; 
+                                   padding: 15px; margin: 15px 0; border-radius: 0 12px 12px 0;">
+                    <strong>📊 Complexity Analysis:</strong><br>`;
+                
+                if (result.complexity_analysis.complexity_score) {
+                    html += `Complexity Score: ${result.complexity_analysis.complexity_score}/10<br>`;
+                }
+                if (result.complexity_analysis.performance_estimate) {
+                    html += `Performance: ${result.complexity_analysis.performance_estimate}<br>`;
+                }
+                if (result.complexity_analysis.optimizations) {
+                    html += `Optimizations: ${result.complexity_analysis.optimizations}`;
+                }
+                html += `</div>`;
+            }
+            
+            // Business Insights
+            if (result.business_insights && result.business_insights.length > 0) {
+                html += `<div style="background: rgba(168, 85, 247, 0.1); border-left: 4px solid #a855f7; 
+                                   padding: 15px; margin: 15px 0; border-radius: 0 12px 12px 0;">
+                    <strong>💡 Business Insights:</strong>
+                    <ul style="margin: 10px 0 0 20px;">`;
+                result.business_insights.forEach(insight => {
+                    html += `<li>${insight}</li>`;
+                });
+                html += `</ul></div>`;
             }
             
             if (result.safety_warnings && result.safety_warnings.length > 0) {
@@ -454,6 +555,19 @@
             
             if (result.estimated_rows) {
                 html += `<p><strong>Estimated rows:</strong> ${result.estimated_rows}</p>`;
+            }
+            
+            // Suggested Actions
+            if (result.suggested_actions && result.suggested_actions.length > 0) {
+                html += `<div style="margin: 15px 0;">
+                    <h4 style="color: #fbbf24;">⚡ Suggested Actions:</h4>`;
+                result.suggested_actions.forEach(action => {
+                    html += `<div style="background: rgba(251, 191, 36, 0.1); padding: 10px; margin: 5px 0; 
+                                       border-radius: 6px; border-left: 3px solid #fbbf24;">
+                        <strong>${action.agent.toUpperCase()}:</strong> ${action.message}
+                    </div>`;
+                });
+                html += `</div>`;
             }
             
             html += `<button onclick="executeSQL()" style="margin-top: 15px;">Execute Query</button>`;
@@ -536,6 +650,70 @@
             container.innerHTML = `<div class="status ${type}">${message}</div>`;
         }
 
+        async function loadSuggestedQuestions() {
+            try {
+                // Pass database URL if available for personalized suggestions
+                const url = currentDatabaseUrl 
+                    ? `/api/suggested-questions?database_url=${encodeURIComponent(currentDatabaseUrl)}`
+                    : '/api/suggested-questions';
+                    
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                if (result.success && result.suggestions) {
+                    displaySuggestedQuestions(result.suggestions);
+                }
+            } catch (error) {
+                console.log('Failed to load suggestions:', error);
+            }
+        }
+
+        function displaySuggestedQuestions(suggestions) {
+            const querySection = document.getElementById('query-section');
+            
+            // Remove existing suggestions if any
+            const existingSuggestions = document.getElementById('suggestions-container');
+            if (existingSuggestions) {
+                existingSuggestions.remove();
+            }
+            
+            // Create suggestions container
+            const suggestionsDiv = document.createElement('div');
+            suggestionsDiv.id = 'suggestions-container';
+            suggestionsDiv.innerHTML = `
+                <div style="margin: 20px 0;">
+                    <h3 style="color: #a855f7; margin-bottom: 15px; font-size: 1.1em;">💡 Popular questions to ask:</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
+                        ${suggestions.map(question => `
+                            <button onclick="useSuggestion('${question.replace(/'/g, "\\'")}'); return false;" 
+                                    style="width: 100%; text-align: left; background: rgba(168, 85, 247, 0.1); 
+                                           border: 1px solid rgba(168, 85, 247, 0.3); padding: 12px; 
+                                           border-radius: 8px; font-size: 13px; transition: all 0.2s ease;
+                                           cursor: pointer;"
+                                    onmouseover="this.style.background='rgba(168, 85, 247, 0.2)'"
+                                    onmouseout="this.style.background='rgba(168, 85, 247, 0.1)'">
+                                ${question}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Insert after the form group but before the generate button
+            const formGroup = querySection.querySelector('.form-group');
+            if (formGroup) {
+                formGroup.parentNode.insertBefore(suggestionsDiv, formGroup.nextSibling);
+            } else {
+                // If no form group (page still loading), append to query section
+                querySection.appendChild(suggestionsDiv);
+            }
+        }
+
+        function useSuggestion(question) {
+            document.getElementById('natural-query').value = question;
+            document.getElementById('natural-query').focus();
+        }
+
         // Example queries
         const examples = [
             "Show me all users",
@@ -545,23 +723,10 @@
             "Average order value by customer"
         ];
 
-        // Add example buttons
+        // Load suggested questions on page load
         document.addEventListener('DOMContentLoaded', function() {
-            const querySection = document.getElementById('query-section');
-            const exampleDiv = document.createElement('div');
-            exampleDiv.innerHTML = '<p><strong>Try these examples:</strong></p>';
-            
-            examples.forEach(example => {
-                const button = document.createElement('button');
-                button.textContent = example;
-                button.style.cssText = 'width: auto; margin: 5px; padding: 8px 15px; font-size: 12px;';
-                button.onclick = () => {
-                    document.getElementById('natural-query').value = example;
-                };
-                exampleDiv.appendChild(button);
-            });
-            
-            querySection.appendChild(exampleDiv);
+            // Load generic suggestions immediately to show users what they can ask
+            loadSuggestedQuestions();
         });
     </script>
 </body>
