@@ -189,4 +189,56 @@ RESPONSE FORMAT:
             return 500
         
         # Default estimate
-        return 1000 
+        return 1000
+
+    async def generate_suggested_questions(self, schema_info: dict) -> List[str]:
+        """Generate business-friendly questions based on database schema"""
+        
+        # Extract table information
+        tables = []
+        for table_name, columns in schema_info.items():
+            column_names = [col['name'] for col in columns]
+            tables.append(f"Table '{table_name}' with columns: {', '.join(column_names)}")
+        
+        schema_summary = "\n".join(tables)
+        
+        prompt = f"""
+        Based on this database schema, suggest 8 practical business questions that a non-technical user might want to ask.
+        
+        Database Schema:
+        {schema_summary}
+        
+        Generate questions that are:
+        - Business-focused (not technical)
+        - Actionable for decision-making
+        - Varied in complexity
+        - Natural language (no SQL terms)
+        
+        Format as a simple list, one question per line.
+        Examples:
+        - "Who are our top 10 customers by revenue?"
+        - "What products are selling best this month?"
+        - "Which marketing campaigns drove the most sales?"
+        """
+        
+        try:
+            response = self.client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=500,
+                temperature=0.7
+            )
+            
+            suggestions = response.choices[0].message.content.strip()
+            # Parse into list
+            questions = [q.strip('- ').strip() for q in suggestions.split('\n') if q.strip() and not q.strip().startswith('#')]
+            return questions[:8]  # Limit to 8 suggestions
+            
+        except Exception as e:
+            print(f"Error generating suggestions: {e}")
+            return [
+                "Who are our top customers?",
+                "What are our best-selling products?",
+                "How is our revenue trending?",
+                "Which users are most active?"
+            ] 
