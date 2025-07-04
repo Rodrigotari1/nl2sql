@@ -62,6 +62,29 @@ def create_demo_database(database_url: str):
             );
         """)
         
+        # Create indexes for performance optimization
+        print("📊 Creating performance indexes...")
+        
+        # Foreign key indexes (CRITICAL - always index foreign keys)
+        cursor.execute("CREATE INDEX idx_orders_user_id ON orders(user_id);")
+        cursor.execute("CREATE INDEX idx_order_items_order_id ON order_items(order_id);")
+        cursor.execute("CREATE INDEX idx_order_items_product_id ON order_items(product_id);")
+        
+        # Frequently searched columns
+        cursor.execute("CREATE INDEX idx_users_email ON users(email);")  # Email lookups
+        cursor.execute("CREATE INDEX idx_products_category ON products(category);")  # Category filtering
+        cursor.execute("CREATE INDEX idx_orders_order_date ON orders(order_date);")  # Date range queries
+        
+        # Composite indexes for complex queries
+        cursor.execute("CREATE INDEX idx_orders_user_date ON orders(user_id, order_date);")  # User's orders by date
+        cursor.execute("CREATE INDEX idx_products_category_price ON products(category, price);")  # Category + price filtering
+        
+        # Functional indexes for search
+        cursor.execute("CREATE INDEX idx_users_name_lower ON users(LOWER(name));")  # Case-insensitive name search
+        cursor.execute("CREATE INDEX idx_products_name_lower ON products(LOWER(name));")  # Case-insensitive product search
+        
+        print("✅ Indexes created successfully!")
+        
         # Insert sample users
         users_data = [
             ('Alice Johnson', 'alice@example.com'),

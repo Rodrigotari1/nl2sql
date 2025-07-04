@@ -191,6 +191,50 @@ RESPONSE FORMAT:
         # Default estimate
         return 1000
 
+    def analyze_query_performance(self, sql: str, schema: SchemaResponse) -> Dict[str, Any]:
+        """Analyze query for performance issues and suggest optimizations"""
+        analysis = {
+            "performance_score": 100,  # Start with perfect score
+            "issues": [],
+            "suggestions": [],
+            "estimated_execution_time": "< 100ms"
+        }
+        
+        sql_upper = sql.upper()
+        
+        # Check for missing indexes on WHERE clauses
+        where_match = re.search(r'WHERE\s+(\w+)\.(\w+)', sql_upper)
+        if where_match:
+            table_alias, column = where_match.groups()
+            analysis["suggestions"].append(f"Ensure index exists on {column} for fast lookups")
+        
+        # Check for foreign key joins without indexes
+        if "JOIN" in sql_upper:
+            join_matches = re.findall(r'JOIN\s+(\w+).*?ON\s+\w+\.(\w+)\s*=\s*\w+\.(\w+)', sql_upper)
+            for match in join_matches:
+                table, col1, col2 = match
+                analysis["suggestions"].append(f"Ensure indexes exist on join columns: {col1}, {col2}")
+        
+        # Check for full table scans
+        if "WHERE" not in sql_upper and "SELECT" in sql_upper:
+            analysis["performance_score"] -= 30
+            analysis["issues"].append("Full table scan - consider adding WHERE clause")
+            analysis["estimated_execution_time"] = "1-10 seconds"
+        
+        # Check for SELECT *
+        if "SELECT *" in sql_upper:
+            analysis["performance_score"] -= 10
+            analysis["issues"].append("SELECT * retrieves unnecessary columns")
+            analysis["suggestions"].append("Select only needed columns for better performance")
+        
+        # Check for ORDER BY without LIMIT
+        if "ORDER BY" in sql_upper and "LIMIT" not in sql_upper:
+            analysis["performance_score"] -= 20
+            analysis["issues"].append("ORDER BY without LIMIT can be slow on large datasets")
+            analysis["suggestions"].append("Consider adding LIMIT clause")
+        
+        return analysis
+
     async def generate_suggested_questions(self, schema_info: dict) -> List[str]:
         """Generate business-friendly questions based on database schema"""
         

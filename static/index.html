@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Database Agents - Intelligent Business Intelligence</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,416 +13,545 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
             min-height: 100vh;
             color: #ffffff;
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            animation: backgroundMove 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundMove {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
-            animation: fadeInUp 0.6s ease-out;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 80px 0 60px;
+            position: relative;
         }
 
-        /* Add subtle glow to main heading */
-        .header h1 {
-            text-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
-        }
-
-        /* Loading spinner */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
             border-radius: 50%;
-            border-top-color: #a855f7;
-            animation: spin 1s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            font-size: 2.2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #22d3ee 0%, #a855f7 50%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo i {
+            background: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header h1 {
+            font-size: 4em;
+            margin-bottom: 24px;
+            color: #ffffff;
+            font-weight: 800;
+            line-height: 1.1;
+            text-shadow: 0 0 80px rgba(168, 85, 247, 0.3);
+        }
+
+        .header p {
+            font-size: 1.4em;
+            color: #94a3b8;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(168, 85, 247, 0.2);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card h2 {
+            color: #ffffff;
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h2 i {
+            color: #a855f7;
+            font-size: 0.8em;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #e2e8f0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 18px 24px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.03);
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #64748b;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 18px 32px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #7c3aed 100%);
+            color: white;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 48px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Connection Status */
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .status.success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+
+        /* Query Interface */
+        .query-section {
+            grid-column: 1 / -1;
+        }
+
+        .query-input-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .query-input {
+            min-height: 120px;
+            resize: vertical;
+            padding-right: 80px;
+        }
+
+        .query-submit {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            padding: 12px 20px;
+            font-size: 14px;
+        }
+
+        /* Suggestions */
+        .suggestions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .suggestion {
+            background: rgba(168, 85, 247, 0.05);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .suggestion:hover {
+            background: rgba(168, 85, 247, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Analysis Results */
+        .analysis-results {
+            display: grid;
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .agent-result {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid;
+        }
+
+        .agent-result.query { border-left-color: #22d3ee; }
+        .agent-result.insight { border-left-color: #a855f7; }
+        .agent-result.security { border-left-color: #f59e0b; }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .agent-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .agent-result.query .agent-icon {
+            background: rgba(34, 211, 238, 0.2);
+            color: #22d3ee;
+        }
+
+        .agent-result.insight .agent-icon {
+            background: rgba(168, 85, 247, 0.2);
+            color: #a855f7;
+        }
+
+        .agent-result.security .agent-icon {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .agent-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* SQL Code Block */
+        .sql-code {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(168, 85, 247, 0.3);
+            border-top: 2px solid #a855f7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
-            padding: 60px 0;
-        }
-
-        .header h1 {
-            font-size: 3.5em;
-            margin-bottom: 16px;
-            color: #ffffff;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header p {
-            font-size: 1.3em;
-            color: #a1a1aa;
-            font-weight: 400;
-            opacity: 0.9;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 32px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            animation: cardSlideIn 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.2s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
-
-        .card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        @keyframes cardSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .connection-section {
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #ffffff;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .card h2 {
-            color: #ffffff;
-            font-size: 1.6em;
-            font-weight: 700;
-            margin-bottom: 28px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        input, textarea, button {
-            width: 100%;
-            padding: 16px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        input, textarea {
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-            backdrop-filter: blur(10px);
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: #a1a1aa;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #a855f7;
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        button {
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        button:hover::before {
-            left: 100%;
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .status {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-
-        .status.success {
-            background: rgba(34, 197, 94, 0.1);
-            color: #4ade80;
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .status.error {
-            background: rgba(239, 68, 68, 0.1);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .status.warning {
-            background: rgba(245, 158, 11, 0.1);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .query-section {
-            display: none;
-        }
-
-        .query-section.active {
-            display: block;
-        }
-
-        .sql-preview {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 14px;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            color: #e5e5e5;
-            backdrop-filter: blur(10px);
-        }
-
-        .explanation {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid #3b82f6;
-            padding: 18px;
-            margin: 15px 0;
-            border-radius: 0 12px 12px 0;
-            backdrop-filter: blur(10px);
-            color: #ffffff;
-        }
-
-        .warnings {
-            background: rgba(245, 158, 11, 0.1);
-            border-left: 4px solid #f59e0b;
-            padding: 18px;
-            margin: 15px 0;
-            border-radius: 0 12px 12px 0;
-            backdrop-filter: blur(10px);
-            color: #ffffff;
-        }
-
-        .warnings ul {
-            margin-left: 20px;
-        }
-
-        .results-table {
-            margin-top: 20px;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        th, td {
-            padding: 16px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
-        th {
-            background: rgba(168, 85, 247, 0.2);
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .loading.active {
-            display: block;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .grid {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .card {
+                padding: 24px;
+            }
+            
+            .suggestions {
                 grid-template-columns: 1fr;
             }
-            
-            .container {
-                padding: 10px;
-            }
-            
-            .header h1 {
-                font-size: 2em;
-            }
+        }
+
+        /* Animation Utilities */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>🤖 AI Database Agents</h1>
-            <p>Intelligent AI agents that understand your data and provide business insights</p>
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                AI Database Agents
+            </div>
+            <h1>Intelligent Business Intelligence</h1>
+            <p>Multi-agent AI system that understands your data and provides strategic business insights</p>
         </div>
 
-        <!-- Connection Section -->
-        <div class="card connection-section">
-            <h2>Database Connection</h2>
-            <div class="form-group">
-                <label for="database-url">PostgreSQL Connection String</label>
-                <input 
-                    type="text" 
-                    id="database-url" 
-                    placeholder="postgresql://username:password@localhost:5432/database"
-                    value="postgresql://username:password@localhost:5432/demo_db"
-                >
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Database Connection -->
+            <div class="card fade-in">
+                <h2><i class="fas fa-database"></i> Database Connection</h2>
+                
+                <div id="connectionStatus" style="display: none;"></div>
+                
+                <div class="form-group">
+                    <label for="databaseUrl">PostgreSQL Connection String</label>
+                    <input 
+                        type="text" 
+                        id="databaseUrl" 
+                        placeholder="postgresql://user:password@host:port/database"
+                        value="postgresql://postgres.cggrjklquxrubntnjdpr:Rodrigue123.@aws-0-eu-north-1.pooler.supabase.com:6543/postgres"
+                    >
+                </div>
+                
+                <button id="connectBtn" class="btn btn-primary" onclick="connectDatabase()">
+                    <i class="fas fa-plug"></i>
+                    Connect to Database
+                </button>
             </div>
-            <button onclick="testConnection()">Connect to Database</button>
-            <div id="connection-status"></div>
+
+            <!-- AI Query Interface -->
+            <div class="card fade-in">
+                <h2><i class="fas fa-brain"></i> AI Query Interface</h2>
+                
+                <div class="form-group">
+                    <label for="queryInput">Ask your business question</label>
+                    <div class="query-input-container">
+                        <textarea 
+                            id="queryInput" 
+                            class="query-input"
+                            placeholder="e.g., Who are our top customers by revenue?"
+                        ></textarea>
+                        <button id="queryBtn" class="btn btn-primary query-submit" onclick="generateQuery()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Query Section -->
-        <div class="card query-section" id="query-section">
-            <h2>What would you like to know?</h2>
-            <div class="form-group">
-                <label for="natural-query">Ask your business question</label>
-                <textarea 
-                    id="natural-query" 
-                    rows="3" 
-                    placeholder="e.g., Who are our top customers this quarter? What products are selling best?"
-                ></textarea>
+        <!-- Suggestions Section -->
+        <div class="card fade-in query-section">
+            <h2><i class="fas fa-lightbulb"></i> Popular Questions</h2>
+            <div id="suggestions" class="suggestions">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading intelligent suggestions...
+                </div>
             </div>
-            <button onclick="generateSQL()">Get Answer</button>
-            
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>AI agents are analyzing your request...</p>
-            </div>
-
-            <div id="query-result"></div>
         </div>
 
-        <!-- Results Section -->
-        <div class="card" id="results-section" style="display: none;">
-            <h2>Query Results</h2>
-            <div id="execution-results"></div>
+        <!-- Analysis Results -->
+        <div id="analysisResults" class="analysis-results" style="display: none;"></div>
+
+        <!-- Query Results -->
+        <div id="queryResults" style="display: none;" class="card slide-up query-section">
+            <h2><i class="fas fa-table"></i> Query Results</h2>
+            <div id="resultsContent"></div>
         </div>
     </div>
 
     <script>
+        let connected = false;
         let currentDatabaseUrl = '';
-        let currentSQL = '';
 
-        async function testConnection() {
-            const url = document.getElementById('database-url').value;
-            const statusDiv = document.getElementById('connection-status');
+        // Auto-connect on page load if URL is provided
+        window.addEventListener('load', function() {
+            const urlInput = document.getElementById('databaseUrl');
+            if (urlInput.value.trim()) {
+                connectDatabase();
+            }
+            loadSuggestions();
+        });
+
+        async function connectDatabase() {
+            const url = document.getElementById('databaseUrl').value.trim();
+            const connectBtn = document.getElementById('connectBtn');
+            const statusDiv = document.getElementById('connectionStatus');
             
-            if (!url.trim()) {
-                showStatus(statusDiv, 'Please enter a database connection string', 'error');
+            if (!url) {
+                showStatus('Please enter a database connection string', 'error');
                 return;
             }
+
+            // Show loading state
+            connectBtn.innerHTML = '<div class="spinner"></div> Connecting...';
+            connectBtn.disabled = true;
 
             try {
                 const response = await fetch('/api/connect', {
@@ -431,302 +561,273 @@
                 });
 
                 const result = await response.json();
-                
+
                 if (result.status === 'success') {
-                    showStatus(statusDiv, `✅ Connected to: ${result.database_name}`, 'success');
+                    connected = true;
                     currentDatabaseUrl = url;
-                    document.getElementById('query-section').classList.add('active');
-                    loadSuggestedQuestions(); // Load AI-generated suggestions
+                    showStatus(`✅ Connected to: ${result.database_name}`, 'success');
+                    connectBtn.innerHTML = '<i class="fas fa-check"></i> Connected';
+                    loadSuggestions();
                 } else {
-                    showStatus(statusDiv, `❌ ${result.message}`, 'error');
+                    showStatus(`❌ ${result.message}`, 'error');
+                    connectBtn.innerHTML = '<i class="fas fa-plug"></i> Connect to Database';
                 }
             } catch (error) {
-                showStatus(statusDiv, `❌ Connection failed: ${error.message}`, 'error');
+                showStatus(`❌ Connection failed: ${error.message}`, 'error');
+                connectBtn.innerHTML = '<i class="fas fa-plug"></i> Connect to Database';
+            } finally {
+                connectBtn.disabled = false;
             }
         }
 
-        async function generateSQL() {
-            const naturalQuery = document.getElementById('natural-query').value;
-            const loadingDiv = document.getElementById('loading');
-            const resultDiv = document.getElementById('query-result');
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('connectionStatus');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+            statusDiv.style.display = 'flex';
+        }
+
+        async function loadSuggestions() {
+            const suggestionsDiv = document.getElementById('suggestions');
             
-            if (!naturalQuery.trim()) {
-                showStatus(resultDiv, 'Please enter a natural language query', 'error');
+            try {
+                let url = '/api/suggested-questions';
+                if (connected && currentDatabaseUrl) {
+                    url += `?database_url=${encodeURIComponent(currentDatabaseUrl)}`;
+                }
+
+                const response = await fetch(url);
+                const suggestions = await response.json();
+
+                if (suggestions && suggestions.length > 0) {
+                    suggestionsDiv.innerHTML = suggestions.map(suggestion => 
+                        `<div class="suggestion" onclick="fillQuery('${suggestion.replace(/'/g, "\\'")}')">
+                            <i class="fas fa-arrow-right" style="color: #a855f7; margin-right: 8px;"></i>
+                            ${suggestion}
+                        </div>`
+                    ).join('');
+                } else {
+                    suggestionsDiv.innerHTML = `
+                        <div class="suggestion">
+                            <i class="fas fa-info-circle" style="color: #64748b; margin-right: 8px;"></i>
+                            Connect to your database to see personalized suggestions
+                        </div>`;
+                }
+            } catch (error) {
+                console.error('Error loading suggestions:', error);
+                suggestionsDiv.innerHTML = `
+                    <div class="suggestion">
+                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-right: 8px;"></i>
+                        Unable to load suggestions
+                    </div>`;
+            }
+        }
+
+        function fillQuery(suggestion) {
+            document.getElementById('queryInput').value = suggestion;
+        }
+
+        async function generateQuery() {
+            const query = document.getElementById('queryInput').value.trim();
+            const queryBtn = document.getElementById('queryBtn');
+            const resultsDiv = document.getElementById('analysisResults');
+            
+            if (!query) {
+                alert('Please enter a question');
                 return;
             }
 
-            loadingDiv.classList.add('active');
-            resultDiv.innerHTML = '';
+            if (!connected) {
+                alert('Please connect to a database first');
+                return;
+            }
+
+            // Show loading state
+            queryBtn.innerHTML = '<div class="spinner"></div>';
+            queryBtn.disabled = true;
+            
+            resultsDiv.innerHTML = `
+                <div class="card slide-up">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        AI agents are analyzing your query...
+                    </div>
+                </div>`;
+            resultsDiv.style.display = 'block';
 
             try {
                 const response = await fetch('/api/generate-query', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        natural_language: naturalQuery,
+                        natural_language: query,
                         database_url: currentDatabaseUrl
                     })
                 });
 
                 const result = await response.json();
-                currentSQL = result.sql;
-                
-                displayQueryResult(result, resultDiv);
-                
+                displayAnalysisResults(result);
+
             } catch (error) {
-                showStatus(resultDiv, `❌ Failed to generate SQL: ${error.message}`, 'error');
+                resultsDiv.innerHTML = `
+                    <div class="agent-result security">
+                        <div class="agent-header">
+                            <div class="agent-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="agent-title">Error</div>
+                        </div>
+                        <p>Failed to analyze query: ${error.message}</p>
+                    </div>`;
             } finally {
-                loadingDiv.classList.remove('active');
+                queryBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                queryBtn.disabled = false;
             }
         }
 
-        function displayQueryResult(result, container) {
-            let html = '';
+        function displayAnalysisResults(result) {
+            const resultsDiv = document.getElementById('analysisResults');
             
-            // AI Agent Messages
-            if (result.agent_messages && result.agent_messages.length > 0) {
-                html += `<div style="margin-bottom: 20px;">
-                    <h4 style="color: #a855f7; margin-bottom: 10px;">🤖 AI Agents Analysis:</h4>`;
-                
-                result.agent_messages.forEach(msg => {
-                    const priority_color = {
-                        'low': '#4ade80',
-                        'medium': '#fbbf24', 
-                        'high': '#f87171',
-                        'critical': '#ef4444'
-                    }[msg.priority] || '#a1a1aa';
-                    
-                    html += `<div style="background: rgba(255,255,255,0.05); padding: 12px; margin: 8px 0; 
-                                       border-left: 3px solid ${priority_color}; border-radius: 6px;">
-                        <strong style="color: ${priority_color};">${msg.agent.toUpperCase()} Agent:</strong> ${msg.message}
+            let html = '<div class="card slide-up"><h2><i class="fas fa-robot"></i> AI Agents Analysis</h2>';
+            
+            // Query Agent Results
+            if (result.primary_response) {
+                html += `
+                    <div class="agent-result query">
+                        <div class="agent-header">
+                            <div class="agent-icon"><i class="fas fa-search"></i></div>
+                            <div class="agent-title">QUERY Agent</div>
+                        </div>
+                        <p><strong>Generated SQL query:</strong></p>
+                        <div class="sql-code">${escapeHtml(result.primary_response.sql || 'No SQL generated')}</div>
+                        <p><strong>Query Explanation:</strong></p>
+                        <p>${result.primary_response.explanation || 'No explanation provided'}</p>
                     </div>`;
-                });
-                html += `</div>`;
-            }
-            
-            if (result.explanation) {
-                html += `<div class="explanation">
-                    <strong>Query Explanation:</strong><br>
-                    ${result.explanation}
-                </div>`;
-            }
-            
-            // Complexity Analysis
-            if (result.complexity_analysis && Object.keys(result.complexity_analysis).length > 0) {
-                html += `<div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; 
-                                   padding: 15px; margin: 15px 0; border-radius: 0 12px 12px 0;">
-                    <strong>📊 Complexity Analysis:</strong><br>`;
-                
-                if (result.complexity_analysis.complexity_score) {
-                    html += `Complexity Score: ${result.complexity_analysis.complexity_score}/10<br>`;
+
+                // Complexity Analysis
+                if (result.primary_response.complexity) {
+                    html += `
+                        <div class="agent-result query">
+                            <div class="agent-header">
+                                <div class="agent-icon"><i class="fas fa-chart-line"></i></div>
+                                <div class="agent-title">📊 Complexity Analysis</div>
+                            </div>
+                            <pre>${JSON.stringify(result.primary_response.complexity, null, 2)}</pre>
+                        </div>`;
                 }
-                if (result.complexity_analysis.performance_estimate) {
-                    html += `Performance: ${result.complexity_analysis.performance_estimate}<br>`;
+
+                // Safety Warnings
+                if (result.primary_response.safety_warnings && result.primary_response.safety_warnings.length > 0) {
+                    html += `
+                        <div class="agent-result security">
+                            <div class="agent-header">
+                                <div class="agent-icon"><i class="fas fa-shield-alt"></i></div>
+                                <div class="agent-title">⚠️ Safety Warnings</div>
+                            </div>
+                            <ul style="margin-left: 20px;">
+                                ${result.primary_response.safety_warnings.map(warning => 
+                                    `<li style="margin-bottom: 8px;">${warning}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>`;
                 }
-                if (result.complexity_analysis.optimizations) {
-                    html += `Optimizations: ${result.complexity_analysis.optimizations}`;
-                }
-                html += `</div>`;
             }
-            
-            // Business Insights
-            if (result.business_insights && result.business_insights.length > 0) {
-                html += `<div style="background: rgba(168, 85, 247, 0.1); border-left: 4px solid #a855f7; 
-                                   padding: 15px; margin: 15px 0; border-radius: 0 12px 12px 0;">
-                    <strong>💡 Business Insights:</strong>
-                    <ul style="margin: 10px 0 0 20px;">`;
-                result.business_insights.forEach(insight => {
-                    html += `<li>${insight}</li>`;
-                });
-                html += `</ul></div>`;
-            }
-            
-            if (result.safety_warnings && result.safety_warnings.length > 0) {
-                html += `<div class="warnings">
-                    <strong>⚠️ Safety Warnings:</strong>
-                    <ul>`;
-                result.safety_warnings.forEach(warning => {
-                    html += `<li>${warning}</li>`;
-                });
-                html += `</ul></div>`;
-            }
-            
-            html += `<div class="sql-preview">${result.sql}</div>`;
-            
-            if (result.estimated_rows) {
-                html += `<p><strong>Estimated rows:</strong> ${result.estimated_rows}</p>`;
-            }
-            
-            // Suggested Actions
-            if (result.suggested_actions && result.suggested_actions.length > 0) {
-                html += `<div style="margin: 15px 0;">
-                    <h4 style="color: #fbbf24;">⚡ Suggested Actions:</h4>`;
-                result.suggested_actions.forEach(action => {
-                    html += `<div style="background: rgba(251, 191, 36, 0.1); padding: 10px; margin: 5px 0; 
-                                       border-radius: 6px; border-left: 3px solid #fbbf24;">
-                        <strong>${action.agent.toUpperCase()}:</strong> ${action.message}
+
+            // Insight Agent Results
+            if (result.insights && result.insights.length > 0) {
+                html += `
+                    <div class="agent-result insight">
+                        <div class="agent-header">
+                            <div class="agent-icon"><i class="fas fa-lightbulb"></i></div>
+                            <div class="agent-title">💡 Business Insights</div>
+                        </div>
+                        <ul style="margin-left: 20px;">
+                            ${result.insights.map(insight => 
+                                `<li style="margin-bottom: 12px; line-height: 1.6;">${insight}</li>`
+                            ).join('')}
+                        </ul>
                     </div>`;
-                });
-                html += `</div>`;
             }
-            
-            html += `<button onclick="executeSQL()" style="margin-top: 15px;">Execute Query</button>`;
-            
-            container.innerHTML = html;
+
+            // Add Execute Query Button
+            if (result.primary_response && result.primary_response.sql) {
+                html += `
+                    <div style="margin-top: 24px; text-align: center;">
+                        <button class="btn btn-primary" onclick="executeQuery()">
+                            <i class="fas fa-play"></i>
+                            Execute Query
+                        </button>
+                    </div>`;
+            }
+
+            html += '</div>';
+            resultsDiv.innerHTML = html;
         }
 
-        async function executeSQL() {
-            const resultsSection = document.getElementById('results-section');
-            const executionDiv = document.getElementById('execution-results');
-            
-            if (!currentSQL) {
-                showStatus(executionDiv, 'No SQL query to execute', 'error');
-                return;
-            }
+        async function executeQuery() {
+            const result = await fetch('/api/execute-query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sql: document.querySelector('.sql-code').textContent,
+                    database_url: currentDatabaseUrl
+                })
+            });
 
-            try {
-                const response = await fetch('/api/execute-query', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        sql: currentSQL,
-                        database_url: currentDatabaseUrl
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayResults(result, executionDiv);
-                    resultsSection.style.display = 'block';
-                } else {
-                    showStatus(executionDiv, `❌ Query failed: ${result.error}`, 'error');
-                }
-                
-            } catch (error) {
-                showStatus(executionDiv, `❌ Execution failed: ${error.message}`, 'error');
-            }
-        }
-
-        function displayResults(result, container) {
-            let html = `<p><strong>Execution time:</strong> ${result.execution_time?.toFixed(3)}s</p>`;
-            html += `<p><strong>Rows returned:</strong> ${result.row_count}</p>`;
+            const data = await result.json();
             
-            if (result.was_limited) {
-                html += `<div class="status warning">⚠️ Results were limited to ${result.row_count} rows</div>`;
-            }
+            const resultsDiv = document.getElementById('queryResults');
+            const contentDiv = document.getElementById('resultsContent');
             
-            if (result.data && result.data.length > 0) {
-                html += '<div class="results-table"><table>';
+            if (data.success) {
+                // Create table from results
+                let tableHtml = '<div style="overflow-x: auto;"><table style="width: 100%; border-collapse: collapse; margin-top: 16px;">';
                 
-                // Headers
-                html += '<thead><tr>';
-                result.columns.forEach(col => {
-                    html += `<th>${col}</th>`;
-                });
-                html += '</tr></thead>';
-                
-                // Data
-                html += '<tbody>';
-                result.data.forEach(row => {
-                    html += '<tr>';
-                    result.columns.forEach(col => {
-                        const value = row[col];
-                        html += `<td>${value !== null ? value : '<em>null</em>'}</td>`;
+                if (data.data.length > 0) {
+                    // Headers
+                    tableHtml += '<thead><tr>';
+                    Object.keys(data.data[0]).forEach(key => {
+                        tableHtml += `<th style="border: 1px solid rgba(255,255,255,0.1); padding: 12px; background: rgba(168,85,247,0.1); color: #a855f7; font-weight: 600;">${key}</th>`;
                     });
-                    html += '</tr>';
-                });
-                html += '</tbody>';
-                
-                html += '</table></div>';
-            } else {
-                html += '<p>No data returned.</p>';
-            }
-            
-            container.innerHTML = html;
-        }
-
-        function showStatus(container, message, type) {
-            container.innerHTML = `<div class="status ${type}">${message}</div>`;
-        }
-
-        async function loadSuggestedQuestions() {
-            try {
-                // Pass database URL if available for personalized suggestions
-                const url = currentDatabaseUrl 
-                    ? `/api/suggested-questions?database_url=${encodeURIComponent(currentDatabaseUrl)}`
-                    : '/api/suggested-questions';
+                    tableHtml += '</tr></thead>';
                     
-                const response = await fetch(url);
-                const result = await response.json();
-                
-                if (result.success && result.suggestions) {
-                    displaySuggestedQuestions(result.suggestions);
+                    // Rows
+                    tableHtml += '<tbody>';
+                    data.data.forEach(row => {
+                        tableHtml += '<tr>';
+                        Object.values(row).forEach(value => {
+                            tableHtml += `<td style="border: 1px solid rgba(255,255,255,0.1); padding: 12px;">${value || ''}</td>`;
+                        });
+                        tableHtml += '</tr>';
+                    });
+                    tableHtml += '</tbody>';
                 }
-            } catch (error) {
-                console.log('Failed to load suggestions:', error);
-            }
-        }
-
-        function displaySuggestedQuestions(suggestions) {
-            const querySection = document.getElementById('query-section');
-            
-            // Remove existing suggestions if any
-            const existingSuggestions = document.getElementById('suggestions-container');
-            if (existingSuggestions) {
-                existingSuggestions.remove();
-            }
-            
-            // Create suggestions container
-            const suggestionsDiv = document.createElement('div');
-            suggestionsDiv.id = 'suggestions-container';
-            suggestionsDiv.innerHTML = `
-                <div style="margin: 20px 0;">
-                    <h3 style="color: #a855f7; margin-bottom: 15px; font-size: 1.1em;">💡 Popular questions to ask:</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
-                        ${suggestions.map(question => `
-                            <button onclick="useSuggestion('${question.replace(/'/g, "\\'")}'); return false;" 
-                                    style="width: 100%; text-align: left; background: rgba(168, 85, 247, 0.1); 
-                                           border: 1px solid rgba(168, 85, 247, 0.3); padding: 12px; 
-                                           border-radius: 8px; font-size: 13px; transition: all 0.2s ease;
-                                           cursor: pointer;"
-                                    onmouseover="this.style.background='rgba(168, 85, 247, 0.2)'"
-                                    onmouseout="this.style.background='rgba(168, 85, 247, 0.1)'">
-                                ${question}
-                            </button>
-                        `).join('')}
+                
+                tableHtml += '</table></div>';
+                
+                contentDiv.innerHTML = `
+                    <div style="margin-bottom: 16px;">
+                        <strong>Execution Time:</strong> ${data.execution_time?.toFixed(3)}s | 
+                        <strong>Rows:</strong> ${data.row_count}
+                        ${data.was_limited ? ' (limited)' : ''}
                     </div>
-                </div>
-            `;
-            
-            // Insert after the form group but before the generate button
-            const formGroup = querySection.querySelector('.form-group');
-            if (formGroup) {
-                formGroup.parentNode.insertBefore(suggestionsDiv, formGroup.nextSibling);
+                    ${tableHtml}`;
             } else {
-                // If no form group (page still loading), append to query section
-                querySection.appendChild(suggestionsDiv);
+                contentDiv.innerHTML = `<div style="color: #f87171;">Error: ${data.error}</div>`;
             }
+            
+            resultsDiv.style.display = 'block';
         }
 
-        function useSuggestion(question) {
-            document.getElementById('natural-query').value = question;
-            document.getElementById('natural-query').focus();
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
-        // Example queries
-        const examples = [
-            "Show me all users",
-            "Users created in the last month",
-            "Top 10 customers by order value",
-            "Products that haven't been ordered",
-            "Average order value by customer"
-        ];
-
-        // Load suggested questions on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load generic suggestions immediately to show users what they can ask
-            loadSuggestedQuestions();
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                generateQuery();
+            }
         });
     </script>
 </body>
