@@ -20,7 +20,7 @@ const Index = () => {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <Database className="h-6 w-6 text-blue-600" />
-            <h1 className="text-xl font-semibold text-slate-800">DataCursor</h1>
+            <h1 className="text-xl font-semibold text-slate-800">Zenith</h1>
           </div>
           <ConnectionStatus connection={activeConnection} />
         </div>
